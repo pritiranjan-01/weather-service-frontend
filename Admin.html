@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Global Weather</title>
+    <script src="config.js"></script>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Theme Variables matching Client Site */
+            --primary: #ff9f43;
+            --primary-hover: #ff7e5f;
+            --secondary: #2c3e50;
+            --accent: #4facfe;
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --text-main: #2c3e50;
+            --text-muted: #6c757d;
+            --card-bg: #ffffff;
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --input-bg: #ffffff;
+            --input-border: #ced4da;
+            --input-text: #212529;
+            --table-hover: #f8f9fa;
+            --success-text: #198754; 
+            --danger-text: #dc3545;  
+        }
+
+        [data-theme="dark"] {
+            --primary: #ff9f43;
+            --primary-hover: #e67e22;
+            --secondary: #ecf0f1;
+            --accent: #3498db;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --text-main: #f8f9fa;
+            --text-muted: #aab2bd;
+            --card-bg: #1e293b;
+            --nav-bg: rgba(15, 23, 42, 0.95);
+            --input-bg: #334155;
+            --input-border: #475569;
+            --input-text: #f8f9fa;
+            --table-hover: #2d3748;
+            --success-text: #4ade80; 
+            --danger-text: #f87171;  
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            color: var(--text-main);
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary) !important;
+            font-size: 1.5rem;
+        }
+
+        /* Sidebar / Tabs */
+        .admin-container {
+            display: flex;
+            min-height: calc(100vh - 80px);
+            margin-top: 80px;
+        }
+        .sidebar {
+            width: 250px;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-right: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        [data-theme="dark"] .sidebar {
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .nav-pills .nav-link {
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 12px;
+            text-align: left;
+            transition: all 0.3s;
+        }
+        .nav-pills .nav-link:hover {
+            background: rgba(0,0,0,0.05);
+            color: var(--primary);
+        }
+        [data-theme="dark"] .nav-pills .nav-link:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .nav-pills .nav-link.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 159, 67, 0.3);
+        }
+        .nav-pills .nav-link i { width: 25px; }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        /* Cards */
+        .dashboard-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        [data-theme="dark"] .dashboard-card {
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        /* Stat Cards Specific */
+        .stat-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .quick-link-card:hover {
+            transform: translateY(-5px);
+            cursor: pointer;
+            border-color: var(--primary);
+        }
+
+        /* Forms */
+        .form-control, .form-select {
+            background-color: var(--input-bg);
+            border-color: var(--input-border);
+            color: var(--input-text);
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.25rem rgba(255, 159, 67, 0.25);
+        }
+        
+        /* Placeholder Fix for Dark Mode */
+        .form-control::placeholder {
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+
+        /* Tables & Text Visibility Fixes */
+        .table {
+            color: var(--text-main) !important;
+            --bs-table-color: var(--text-main);
+            --bs-table-bg: transparent;
+        }
+        .table th {
+            font-weight: 700;
+            color: var(--text-muted) !important;
+            border-bottom: 2px solid var(--input-border);
+        }
+        .table td {
+            vertical-align: middle;
+            border-bottom: 1px solid var(--input-border);
+            color: var(--text-main) !important;
+        }
+        
+        .text-muted { color: var(--text-muted) !important; }
+        .text-success { color: var(--success-text) !important; }
+        .text-danger { color: var(--danger-text) !important; }
+        .text-primary { color: var(--primary) !important; }
+
+        .badge-go { background-color: #6c757d; color: white; }
+        .badge-pro { background-color: #0dcaf0; color: black; }
+        .badge-max { background-color: #ffc107; color: black; }
+        
+        [data-theme="dark"] .badge.bg-light {
+            background-color: #334155 !important;
+            color: #f8f9fa !important;
+        }
+        
+        .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+            background-color: var(--table-hover);
+            color: var(--text-main) !important;
+        }
+
+        /* Login Overlay */
+        #login-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-gradient);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-box {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        /* Buttons */
+        .btn-primary-custom {
+            background: var(--primary);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 10px 24px;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+        .btn-primary-custom:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .theme-toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. LOGIN OVERLAY -->
+    <div id="login-overlay">
+        <div class="login-box">
+            <i class="fas fa-user-shield fa-4x text-primary mb-4"></i>
+            <h2 class="fw-bold mb-3">Admin Access</h2>
+            <p class="text-muted mb-4">Please enter your PIN to continue.</p>
+            <input type="password" id="admin-pin" class="form-control text-center fs-3 mb-4" maxlength="4" placeholder="••••">
+            <button onclick="checkLogin()" class="btn btn-primary-custom w-100">Unlock Dashboard</button>
+            <p class="text-muted mt-3 small">Hint: 1234</p>
+        </div>
+    </div>
+
+    <!-- 2. NAVBAR -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-sun me-2"></i>Global Weather <span class="badge bg-danger fs-6 align-top ms-1">ADMIN</span>
+            </a>
+            
+            <div class="d-flex align-items-center">
+                <button class="theme-toggle-btn me-3" onclick="toggleTheme()">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+                <button class="btn btn-outline-danger btn-sm rounded-pill" onclick="location.reload()">Logout</button>
+                <button class="btn btn-outline-primary btn-sm rounded-pill ms-2" onclick=location.href="./index.html">Client Portal</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 3. MAIN CONTAINER -->
+    <div class="container-fluid admin-container">
+        
+        <!-- SIDEBAR -->
+        <div class="sidebar d-none d-md-flex">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
+                <!-- NEW DASHBOARD TAB -->
+                <button class="nav-link active" id="v-pills-dashboard-tab" data-bs-toggle="pill" data-bs-target="#v-pills-dashboard" type="button" onclick="loadDashboardStats()">
+                    <i class="fas fa-chart-pie me-2"></i> Dashboard
+                </button>
+                
+                <button class="nav-link" id="v-pills-weather-tab" data-bs-toggle="pill" data-bs-target="#v-pills-weather" type="button" onclick="loadWeatherReports(1)">
+                    <i class="fas fa-cloud-sun me-2"></i> Weather Data
+                </button>
+                <button class="nav-link" id="v-pills-clients-tab" data-bs-toggle="pill" data-bs-target="#v-pills-clients" type="button" onclick="loadClients()">
+                    <i class="fas fa-users me-2"></i> Client List
+                </button>
+            </div>
+        </div>
+
+        <!-- CONTENT AREA -->
+        <div class="main-content">
+            <div class="tab-content" id="v-pills-tabContent">
+                
+                <!-- TAB 0: DASHBOARD (NEW) -->
+                <div class="tab-pane fade show active" id="v-pills-dashboard">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3><i class="fas fa-tachometer-alt me-2 text-primary"></i>System Overview</h3>
+                        <span class="badge bg-light text-muted border">Live Data</span>
+                    </div>
+
+                    <!-- Stats Row -->
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-3">
+                            <div class="dashboard-card stat-card h-100">
+                                <div>
+                                    <h6 class="text-muted text-uppercase small fw-bold">Active Clients</h6>
+                                    <h2 class="fw-bold mb-0 text-success" id="stat-active-clients">-</h2>
+                                </div>
+                                <div class="stat-icon bg-success bg-opacity-10 text-success">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="dashboard-card stat-card h-100">
+                                <div>
+                                    <h6 class="text-muted text-uppercase small fw-bold">Inactive Clients</h6>
+                                    <h2 class="fw-bold mb-0 text-danger" id="stat-inactive-clients">-</h2>
+                                </div>
+                                <div class="stat-icon bg-danger bg-opacity-10 text-danger">
+                                    <i class="fas fa-user-slash"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="dashboard-card stat-card h-100">
+                                <div>
+                                    <h6 class="text-muted text-uppercase small fw-bold">Local Reports</h6>
+                                    <h2 class="fw-bold mb-0 text-primary" id="stat-local-reports">-</h2>
+                                </div>
+                                <div class="stat-icon bg-primary bg-opacity-10 text-primary">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="dashboard-card stat-card h-100">
+                                <div>
+                                    <h6 class="text-muted text-uppercase small fw-bold">Global Reports</h6>
+                                    <h2 class="fw-bold mb-0 text-info" id="stat-global-reports">15</h2>
+                                </div>
+                                <div class="stat-icon bg-info bg-opacity-10 text-info">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Links -->
+                    <h5 class="fw-bold mb-3 text-muted">Quick Actions</h5>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="dashboard-card quick-link-card h-100 d-flex align-items-center" onclick="switchToTab('v-pills-weather-tab')">
+                                <div class="stat-icon bg-primary text-white me-3">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">Manage Weather</h5>
+                                    <p class="text-muted small mb-0">Create new reports or update existing weather data.</p>
+                                </div>
+                                <i class="fas fa-chevron-right ms-auto text-muted"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="dashboard-card quick-link-card h-100 d-flex align-items-center" onclick="switchToTab('v-pills-clients-tab')">
+                                <div class="stat-icon bg-secondary text-white me-3">
+                                    <i class="fas fa-users-cog"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">Manage Clients</h5>
+                                    <p class="text-muted small mb-0">View subscriber list and manage user status.</p>
+                                </div>
+                                <i class="fas fa-chevron-right ms-auto text-muted"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 1: WEATHER MANAGER -->
+                <div class="tab-pane fade" id="v-pills-weather">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3><i class="fas fa-edit me-2 text-primary"></i>Weather Manager</h3>
+                    </div>
+
+                    <!-- Create / Edit Form -->
+                    <div class="dashboard-card mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0" id="form-title">Create Daily Report</h5>
+                            <button id="cancel-edit-btn" class="btn btn-sm btn-secondary d-none" onclick="resetWeatherForm()">Cancel Edit</button>
+                        </div>
+                        
+                        <form onsubmit="handleWeatherSubmit(event)">
+                            <input type="hidden" id="w-id">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">City Name</label>
+                                    <input type="text" id="w-city" class="form-control" placeholder="e.g. Bhubaneswar" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Temp (°C)</label>
+                                    <input type="number" id="w-temp" class="form-control" step="0.1" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Weather Type</label>
+                                    <select id="w-condition" class="form-select" required>
+                                        <option value="RAINY">Rainy</option>
+                                        <option value="sunny">Sunny</option>
+                                        <option value="cloudy">Cloudy</option>
+                                        <option value="MEDIUM">Medium</option>
+                                        <option value="HOT">Hot</option>
+                                        <option value="COLD">Cold</option>
+                                        <option value="SNOWY">Snowy</option>
+                                        <option value="STORM">Storm</option>
+                                        <option value="SMOG">Smog</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mt-3 text-end">
+                                <button type="submit" id="w-submit-btn" class="btn btn-primary-custom">
+                                    <i class="fas fa-plus-circle me-2"></i>Publish Report
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Weather List Table -->
+                    <div class="dashboard-card">
+                        <div class="row g-2 align-items-center mb-3">
+                            <div class="col-md-6">
+                                <h5 class="fw-bold m-0">Recent Reports</h5>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <div class="input-group w-auto d-inline-flex">
+                                    <input type="number" id="search-id" class="form-control form-control-sm" placeholder="Search ID...">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="searchWeatherById()">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="clearSearch()">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>City</th>
+                                        <th>Temperature</th>
+                                        <th>Condition</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="weather-table-body">
+                                    <tr><td colspan="5" class="text-center text-muted py-4">Loading reports...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-flex justify-content-end mt-3">
+                            <div class="btn-group" id="pagination-controls">
+                                <button class="btn btn-sm btn-outline-secondary" onclick="changePage(-1)">Previous</button>
+                                <button class="btn btn-sm btn-outline-secondary disabled" id="page-indicator">Page 1</button>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="changePage(1)">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: CLIENT LIST -->
+                <div class="tab-pane fade" id="v-pills-clients">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3><i class="fas fa-users-cog me-2 text-primary"></i>Client Database</h3>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="loadClients()">
+                            <i class="fas fa-sync-alt me-1"></i> Refresh
+                        </button>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label small text-muted fw-bold">FILTER STATUS</label>
+                                <select id="client-filter-status" class="form-select form-select-sm" onchange="loadClients()">
+                                    <option value="true" selected>Active Clients</option>
+                                    <option value="false">Inactive Clients</option>
+                                </select>
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label small text-muted fw-bold">SEARCH BY NAME</label>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text bg-transparent border-end-0"><i class="fas fa-search text-muted"></i></span>
+                                    <input type="text" id="client-search-input" class="form-control border-start-0" placeholder="Type name to filter..." onkeyup="filterClientsByName()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Plan</th>
+                                        <th>Status</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="client-table-body">
+                                    <tr>
+                                        <td colspan="7" class="text-center py-4 text-muted">Click Refresh to load clients</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // --- CONFIG ---
+        const API_BASE =  window.APP_CONFIG.API_BASE_URL; 
+        let currentPage = 1; 
+        const pageSize = 10;
+        let allFetchedClients = []; 
+
+        // --- 1. LOGIN LOGIC ---
+        function checkLogin() {
+            const pin = document.getElementById('admin-pin').value;
+            if(pin === "1234") { 
+                document.getElementById('login-overlay').style.display = 'none';
+                loadDashboardStats(); // Load dashboard data first
+            } else {
+                alert("Incorrect PIN");
+            }
+        }
+
+        // --- 2. DARK MODE ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            icon.classList.toggle('fa-sun', isDark);
+            icon.classList.toggle('fa-moon', !isDark);
+        }
+
+        // --- 3. DASHBOARD LOGIC (NEW) ---
+        async function loadDashboardStats() {
+            try {
+                // 1. Active Clients
+                const activeRes = await fetch(`${API_BASE}/client/count/true`);
+                const activeData = await parseResponse(activeRes);
+                document.getElementById('stat-active-clients').innerText = activeData.success ? activeData.payload.count : '-';
+
+                // 2. Inactive Clients
+                const inactiveRes = await fetch(`${API_BASE}/client/count/false`);
+                const inactiveData = await parseResponse(inactiveRes);
+                document.getElementById('stat-inactive-clients').innerText = inactiveData.success ? inactiveData.payload.count : '-';
+
+                // 3. Local Reports
+                const localRes = await fetch(`${API_BASE}/weather/count`);
+                const localData = await parseResponse(localRes);
+                document.getElementById('stat-local-reports').innerText = localData.success ? localData.payload.count : '-';
+
+                // 4. Global (Hardcoded as requested)
+                document.getElementById('stat-global-reports').innerText = "15";
+
+            } catch(e) {
+                console.error("Failed to load dashboard stats", e);
+            }
+        }
+
+        function switchToTab(tabId) {
+            // Trigger the tab click event to switch views
+            document.getElementById(tabId).click();
+        }
+
+        // --- 4. WEATHER OPERATIONS ---
+        async function loadWeatherReports(page) {
+            currentPage = page;
+            if(currentPage < 1) currentPage = 1;
+            const apiPageNumber = currentPage - 1;
+            document.getElementById('page-indicator').innerText = `Page ${currentPage}`;
+
+            const tbody = document.getElementById('weather-table-body');
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4">Loading...</td></tr>`;
+
+            try {
+                const response = await fetch(`${API_BASE}/weather/page?pageNumber=${apiPageNumber}&pageSize=${pageSize}`);
+                const result = await parseResponse(response);
+
+                if(result.success && Array.isArray(result.payload)) {
+                    renderWeatherTable(result.payload);
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-danger">Failed: ${result.message}</td></tr>`;
+                }
+            } catch(err) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-danger">Server Offline</td></tr>`;
+            }
+        }
+
+        function changePage(delta) {
+            loadWeatherReports(currentPage + delta);
+        }
+
+        function renderWeatherTable(data) {
+            const tbody = document.getElementById('weather-table-body');
+            if(data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4">No reports found on this page.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = data.map(item => `
+                <tr>
+                    <td><small class="text-muted">#${item.id}</small></td>
+                    <td class="fw-bold">${item.city}</td>
+                    <td>${item.temp}°C</td>
+                    <td><span class="badge bg-info text-dark">${item.weatherType}</span></td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editWeather(${item.id}, '${item.city}', ${item.temp}, '${item.weatherType}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteWeather(${item.id})">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function searchWeatherById() {
+            const id = document.getElementById('search-id').value;
+            if(!id) return alert("Please enter an ID");
+            const tbody = document.getElementById('weather-table-body');
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4">Searching...</td></tr>`;
+
+            try {
+                const response = await fetch(`${API_BASE}/weather/${id}`);
+                const result = await parseResponse(response);
+                if(result.success && result.payload) {
+                    const data = result.payload;
+                    if(!data.id) data.id = id;
+                    renderWeatherTable([data]);
+                    document.getElementById('pagination-controls').classList.add('opacity-50', 'pe-none'); 
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-danger">Report #${id} not found</td></tr>`;
+                }
+            } catch(err) {
+                alert("Error: " + err.message);
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-danger">Error fetching ID</td></tr>`;
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('search-id').value = '';
+            document.getElementById('pagination-controls').classList.remove('opacity-50', 'pe-none');
+            loadWeatherReports(currentPage);
+        }
+
+        async function handleWeatherSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('w-id').value;
+            const city = document.getElementById('w-city').value;
+            const temp = document.getElementById('w-temp').value;
+            const condition = document.getElementById('w-condition').value;
+            const isEdit = !!id; 
+
+            try {
+                let url, method, payload;
+                if (isEdit) {
+                    url = `${API_BASE}/weather/${id}`;
+                    method = 'PUT';
+                    payload = { description: condition, temp: parseFloat(temp) };
+                } else {
+                    url = `${API_BASE}/weather`;
+                    method = 'POST';
+                    payload = { city: city, temp: parseFloat(temp), weatherType: condition };
+                }
+
+                const response = await fetch(url, { 
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await parseResponse(response);
+                if(result.success) {
+                    alert(isEdit ? "Report Updated Successfully" : "Report Created Successfully");
+                    resetWeatherForm();
+                    if(document.getElementById('search-id').value) { searchWeatherById(); } else { loadWeatherReports(currentPage); }
+                } else {
+                    alert("Error: " + result.message);
+                }
+            } catch(err) { alert("Server Error: " + err.message); }
+        }
+
+        function editWeather(id, city, temp, type) {
+            document.getElementById('form-title').innerText = `Edit Report #${id}`;
+            document.getElementById('w-id').value = id;
+            document.getElementById('w-city').value = city;
+            document.getElementById('w-temp').value = temp;
+            
+            const select = document.getElementById('w-condition');
+            select.value = type; 
+            if(select.selectedIndex === -1) {
+                for(let i=0; i<select.options.length; i++) {
+                    if(select.options[i].text.toUpperCase() === type.toUpperCase()) {
+                        select.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+            document.getElementById('w-city').disabled = true;
+            document.getElementById('w-submit-btn').innerHTML = `<i class="fas fa-save me-2"></i>Update Report`;
+            document.getElementById('w-submit-btn').classList.replace('btn-primary-custom', 'btn-warning');
+            document.getElementById('cancel-edit-btn').classList.remove('d-none');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetWeatherForm() {
+            document.getElementById('form-title').innerText = "Create Daily Report";
+            document.getElementById('w-id').value = "";
+            document.getElementById('w-city').value = "";
+            document.getElementById('w-city').disabled = false;
+            document.getElementById('w-temp').value = "";
+            document.getElementById('w-condition').selectedIndex = 0;
+            document.getElementById('w-submit-btn').innerHTML = `<i class="fas fa-plus-circle me-2"></i>Publish Report`;
+            document.getElementById('w-submit-btn').classList.replace('btn-warning', 'btn-primary-custom');
+            document.getElementById('cancel-edit-btn').classList.add('d-none');
+        }
+
+        async function deleteWeather(id) {
+            if(!confirm(`Delete Report #${id}?`)) return;
+            try {
+                const response = await fetch(`${API_BASE}/weather/${id}`, { method: 'DELETE' });
+                const result = await parseResponse(response);
+                if(result.success) {
+                    if(document.getElementById('search-id').value) {
+                        document.getElementById('weather-table-body').innerHTML = `<tr><td colspan="5" class="text-center py-4">Deleted.</td></tr>`;
+                    } else { loadWeatherReports(currentPage); }
+                } else { alert(result.message); }
+            } catch(err) { alert("Error connecting to server"); }
+        }
+
+        // --- 5. CLIENT OPERATIONS ---
+        
+        async function loadClients() {
+            const tbody = document.getElementById('client-table-body');
+            const isActive = document.getElementById('client-filter-status').value;
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4">Loading...</td></tr>`;
+
+            try {
+                const response = await fetch(`${API_BASE}/client?isActive=${isActive}`, { method: 'GET' });
+                const result = await parseResponse(response);
+
+                if(result.success && Array.isArray(result.payload)) {
+                    allFetchedClients = result.payload; 
+                    filterClientsByName(); 
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-danger">Failed: ${result.message}</td></tr>`;
+                }
+            } catch(err) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-danger">Server Offline</td></tr>`;
+            }
+        }
+
+        function filterClientsByName() {
+            const query = document.getElementById('client-search-input').value.toLowerCase();
+            const filtered = allFetchedClients.filter(client => 
+                client.name && client.name.toLowerCase().includes(query)
+            );
+            renderClientTable(filtered);
+        }
+
+        function renderClientTable(users) {
+            const tbody = document.getElementById('client-table-body');
+            if(users.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4">No clients found.</td></tr>`;
+                return;
+            }
+
+            const statusText = document.getElementById('client-filter-status').options[document.getElementById('client-filter-status').selectedIndex].text;
+            const statusBadge = statusText.includes('Active') ? 
+                '<span class="badge bg-success bg-opacity-25 text-success rounded-pill">Active</span>' : 
+                '<span class="badge bg-secondary bg-opacity-25 text-secondary rounded-pill">Inactive</span>';
+
+            tbody.innerHTML = users.map(user => {
+                let badgeClass = "badge-go";
+                let planName = "GO";
+                if(user.subscriptionType === 'PRO') { badgeClass = "badge-pro"; planName = "PRO"; }
+                if(user.subscriptionType === 'MAX') { badgeClass = "badge-max"; planName = "MAX"; }
+
+                return `
+                <tr>
+                    <td><small class="text-muted">#${user.id || '?'}</small></td>
+                    <td class="fw-bold">${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.phoneNumber || '-'}</td>
+                    <td><span class="badge ${badgeClass} rounded-pill px-3">${planName}</span></td>
+                    <td>${statusBadge}</td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteClient('${user.email}')">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        async function deleteClient(email) {
+            if(!confirm(`Delete user ${email}?`)) return;
+            try {
+                const response = await fetch(`${API_BASE}/client/${email}`, { method: 'DELETE' });
+                const result = await parseResponse(response);
+                if(result.success) {
+                    alert("User Deleted");
+                    loadClients(); 
+                } else {
+                    alert(result.message);
+                }
+            } catch(err) { alert("Error connecting to server"); }
+        }
+
+        // --- HELPER: Parse ResponseStructure ---
+        async function parseResponse(response) {
+            try {
+                const data = await response.json();
+                if (data.hasOwnProperty('statusCode') && data.hasOwnProperty('status')) {
+                     if(data.status === false) {
+                         return { success: false, message: data.payload || "Operation Failed", payload: null };
+                     }
+                     return {
+                        success: true,
+                        message: (typeof data.payload === 'string') ? data.payload : (data.type || "Success"),
+                        payload: data.payload
+                    };
+                }
+                return { success: response.ok, message: response.statusText, payload: data };
+            } catch (error) {
+                return { success: false, message: "Invalid JSON response", payload: null };
+            }
+        }
+    </script>
+</body>
+</html>
