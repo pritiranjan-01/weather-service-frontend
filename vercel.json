@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "http://springbootrestapi-env.eba-bugmbvqw.ap-south-1.elasticbeanstalk.com/$1"
+    }
+  ]
+}
