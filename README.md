@@ -10,7 +10,7 @@ This application interacts directly with backend APIs for weather data, client r
 https://globalweatherservice.vercel.app/
 
 🔗 **Backend Repository:**  
-https://github.com/pritiranjan-01/Weather-Service-Backend-Springboot-REST
+https://github.com/pritiranjan-01/global-weather-service-backend-springboot
 
 ---
 
