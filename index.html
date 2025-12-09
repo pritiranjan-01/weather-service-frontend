@@ -933,7 +933,7 @@
         async function handlePatchSubscription() {
             const newType = document.getElementById('patch-sub-select').value;
             try {
-                const response = await fetch(`${API_URL}/${currentManageEmail}/subscription?id=${newType}`, {
+                const response = await fetch(`${API_URL}/${currentManageEmail}/subscription?subscriptionId=${newType}`, {
                     method: 'PATCH'
                 });
                 
