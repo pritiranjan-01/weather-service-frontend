@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://global-weather-service-backend-springboot.onrender.com//$1"
-    }
-  ]
-}
