@@ -2,6 +2,8 @@
 
 A full React migration of the original Weather Service project, preserving all existing client and admin functionality.
 
+🔗 [**Backend Repository**](https://github.com/pritiranjan-01/global-weather-service-backend-springboot)
+
 ## What This App Includes
 
 ### Client Portal
