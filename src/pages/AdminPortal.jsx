@@ -52,8 +52,7 @@ async function parseResponse(response) {
 }
 
 export default function AdminPortal() {
-  const apiBase =
-    window.APP_CONFIG?.API_BASE_URL || "http://localhost:8080";
+  const apiBase = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
 
   const [theme, setTheme] = useState("light");

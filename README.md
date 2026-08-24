@@ -39,8 +39,8 @@ A full React migration of the original Weather Service project, preserving all e
 
 ```text
 WeatherService/
-  public/
-    config.js
+  .env
+  .env.example
   src/
     pages/
       ClientPortal.jsx
@@ -64,17 +64,13 @@ WeatherService/
 
 ## Configuration
 
-Update frontend API base URL in:
+Create a `.env` file from `.env.example` and set the backend URL:
 
-- public/config.js
-
-Example:
-
-```js
-window.APP_CONFIG = {
-  API_BASE_URL: "http://localhost:8080",
-};
+```env
+VITE_API_BASE_URL=http://localhost:8080
 ```
+
+Restart the Vite development server after changing environment variables. `VITE_` variables are embedded into the frontend bundle, so do not store secrets in this file.
 
 ## Install
 

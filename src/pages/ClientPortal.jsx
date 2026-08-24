@@ -66,7 +66,7 @@ async function parseResponse(response) {
 }
 
 export default function ClientPortal() {
-  const apiUrl = `${window.APP_CONFIG?.API_BASE_URL || "http://localhost:8080"}/client`;
+  const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/client`;
 
   const [theme, setTheme] = useState("light");
   const [activeSection, setActiveSection] = useState("landing-page");
