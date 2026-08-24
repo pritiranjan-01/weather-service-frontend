@@ -1,0 +1,162 @@
+.client-page .navbar {
+  background: var(--nav-bg);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.client-page .navbar-brand {
+  font-weight: 700;
+  color: var(--primary) !important;
+  font-size: 1.5rem;
+}
+
+.client-page .nav-link {
+  color: var(--text-main);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.client-page .nav-link:hover {
+  color: var(--primary);
+}
+
+.client-page .theme-toggle-btn:hover {
+  transform: rotate(30deg);
+  color: var(--primary);
+}
+
+.client-page .plan-card,
+.client-page .feature-box,
+.client-page .form-section {
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+  transition:
+    background 0.5s ease,
+    transform 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] .client-page .plan-card,
+[data-theme="dark"] .client-page .feature-box,
+[data-theme="dark"] .client-page .form-section {
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.client-page .plan-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 2.5rem;
+  text-align: center;
+}
+
+[data-theme="dark"] .client-page .plan-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.client-page .plan-card.max-plan {
+  border: 2px solid var(--primary);
+}
+
+.client-page .badge-popular {
+  background: var(--primary);
+  color: #fff;
+  position: absolute;
+  top: 15px;
+  right: -30px;
+  padding: 0.5rem 3rem;
+  transform: rotate(45deg);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.client-page .form-section {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 3rem;
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.client-page #contact-section {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 3rem;
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.05);
+}
+
+.client-page .nav-pills-custom {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 5px;
+  border-radius: 50px;
+}
+
+[data-theme="dark"] .client-page .nav-pills-custom {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.client-page .nav-pills-custom .nav-link {
+  color: var(--text-main);
+  border-radius: 50px;
+}
+
+.client-page .nav-pills-custom .nav-link.active {
+  background-color: var(--primary);
+  color: #fff;
+}
+
+.client-page .hero-icon {
+  font-size: 4rem;
+  color: var(--primary);
+  margin-bottom: 20px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.client-page footer {
+  background: var(--footer-bg);
+  color: var(--footer-text);
+  padding: 3rem 0;
+  margin-top: 5rem;
+  border-radius: 24px;
+  margin-bottom: 2rem;
+}
+
+.client-page footer a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.client-page footer a:hover {
+  color: var(--primary);
+}
+
+@media (max-width: 991px) {
+  .client-page .navbar-brand {
+    position: static;
+    transform: none;
+  }
+}
