@@ -453,6 +453,9 @@ export default function ClientPortal() {
                           <i className="fas fa-check text-success me-2" />Daily Report
                         </li>
                         <li className="mb-2">
+                          <i className="fas fa-check text-success me-2" />Report Once at 8 AM
+                        </li>
+                        <li className="mb-2">
                           <i className="fas fa-check text-success me-2" />Local Weather
                         </li>
                         <li className="mb-2 text-muted">
@@ -476,7 +479,7 @@ export default function ClientPortal() {
                     <div className="p-4">
                       <ul className="list-unstyled mb-4">
                         <li className="mb-2">
-                          <i className="fas fa-check text-success me-2" />Daily Report
+                          <i className="fas fa-check text-success me-2" />Report Once at 8 AM
                         </li>
                         <li className="mb-2">
                           <i className="fas fa-check text-success me-2" />Local + International
@@ -503,7 +506,7 @@ export default function ClientPortal() {
                     <div className="p-4">
                       <ul className="list-unstyled mb-4">
                         <li className="mb-2">
-                          <i className="fas fa-check text-success me-2" />2x Daily Reports
+                          <i className="fas fa-check text-success me-2" />Report twice at 8 AM, 6 PM
                         </li>
                         <li className="mb-2">
                           <i className="fas fa-check text-success me-2" />Global Access
