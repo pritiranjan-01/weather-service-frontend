@@ -444,7 +444,9 @@ export default function ClientPortal() {
                   <div className="plan-card h-100">
                     <div className="plan-header">
                       <h3 className="fw-bold">GO</h3>
-                      <div className="plan-price display-4 fw-bold my-2">Free</div>
+                      <div className="plan-original-price">$0</div>
+                      <div className="plan-price display-4 fw-bold my-2">$0</div>
+                      <span className="discount-badge">100% OFF</span>
                       <span className="badge bg-secondary">Essentials</span>
                     </div>
                     <div className="p-4">
@@ -473,7 +475,9 @@ export default function ClientPortal() {
                   <div className="plan-card h-100">
                     <div className="plan-header">
                       <h3 className="fw-bold">PRO</h3>
-                      <div className="plan-price display-4 fw-bold my-2">$5</div>
+                      <div className="plan-original-price">$5</div>
+                      <div className="plan-price display-4 fw-bold my-2">$0</div>
+                      <span className="discount-badge">100% OFF</span>
                       <span className="badge bg-info text-dark">Traveler</span>
                     </div>
                     <div className="p-4">
@@ -500,7 +504,9 @@ export default function ClientPortal() {
                     <div className="badge-popular">POPULAR</div>
                     <div className="plan-header">
                       <h3 className="fw-bold text-primary">MAX</h3>
-                      <div className="plan-price display-4 fw-bold my-2">$12</div>
+                      <div className="plan-original-price">$12</div>
+                      <div className="plan-price display-4 fw-bold my-2">$0</div>
+                      <span className="discount-badge">100% OFF</span>
                       <span className="badge bg-warning text-dark">Power User</span>
                     </div>
                     <div className="p-4">

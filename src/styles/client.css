@@ -49,6 +49,25 @@
   text-align: center;
 }
 
+.client-page .plan-original-price {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: line-through;
+}
+
+.client-page .discount-badge {
+  display: inline-block;
+  margin: -0.25rem 0 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: #dc3545;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
 [data-theme="dark"] .client-page .plan-header {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
